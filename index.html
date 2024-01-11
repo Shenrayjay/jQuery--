@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>星星評分</title>
+    <link rel="stylesheet" href="./star.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="#">星星評分</a></li>
+        <li><a href="./show.html">廣告輪播</a></li>
+        <li><a href="./district.html">行政區郵遞區號</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <img id="img1" class="star" src="./images/star.gif" />
+      <img id="img2" class="star" src="./images/star.gif" />
+      <img id="img3" class="star" src="./images/star.gif" />
+      <img id="img4" class="star" src="./images/star.gif" />
+      <img id="img5" class="star" src="./images/star.gif" />
+    </div>
+    <div class="word">
+      <span id="idsp">您目前選取了0顆星星</span>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      let selectedStarsCount = 0; // 用於存儲選中的星星數
+
+      $(".star")
+        .mouseover(function () {
+          let selectedStars = $(this).prevAll().length + 1;
+          if (!clicked) {
+            $(this).prevAll().addBack().attr("src", "./images/chngstar.gif");
+            $("#idsp").text(`您目前選取了${selectedStars}顆星星`);
+          }
+        })
+        .mouseout(function () {
+          if (!clicked) {
+            $(".star").attr("src", "./images/star.gif");
+            $("#idsp").text("您目前選取了0顆星星");
+          } else {
+            // 如果已點擊，則保持顯示已選中的星星數
+            $("#idsp").text(`您目前選取了${selectedStarsCount}顆星星`);
+          }
+        })
+        .click(function () {
+          selectedStarsCount = $(this).prevAll().length + 1; // 更新選中的星星數
+          $(".star").attr("src", "./images/star.gif"); // 首先重置所有星星
+          $(this).prevAll().addBack().attr("src", "./images/chngstar.gif"); // 然後點亮選中的星星
+          clicked = true;
+          $("#idsp").text(`您目前選取了${selectedStarsCount}顆星星`);
+        })
+        .dblclick(function () {
+          $(".star").attr("src", "./images/star.gif");
+          clicked = false;
+          selectedStarsCount = 0; // 重置選中的星星數
+          $("#idsp").text("您目前選取了0顆星星");
+        });
+    </script>
+  </body>
+</html>

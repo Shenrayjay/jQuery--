@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>行政區選擇</title>
+    <link rel="stylesheet" href="./district.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="./index.html">星星評分</a></li>
+        <li><a href="./show.html">廣告輪播</a></li>
+        <li><a href="#">行政區郵遞區號</a></li>
+      </ul>
+    </nav>
+    <div class="wrapper">
+      <table id="districts-table">
+        <tbody>
+          <!-- 內容要放這 -->
+        </tbody>
+      </table>
+      <select id="districts-select"></select>
+      <select id="city-districts"></select>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="./taiwan_districts.js"></script>
+    <script>
+      $(document).ready(function () {
+        let $citySelect = $("#districts-select");
+        let $districtSelect = $("#city-districts");
+
+        // 城市選單
+        $.each(data, function (i, city) {
+          $citySelect.append($("<option>").val(city.name).text(city.name));
+        });
+
+        // 當選擇城市改變時更新行政區選單
+        $citySelect.change(function () {
+          let selectedCity = $(this).val();
+          $districtSelect.empty();
+
+          $.each(data, function (i, city) {
+            if (city.name === selectedCity) {
+              $.each(city.districts, function (j, district) {
+                // 將郵遞區號和行政區名稱合併
+                $districtSelect.append(
+                  $("<option>")
+                    .val(district.zip)
+                    .text(district.zip + " " + district.name)
+                );
+              });
+            }
+          });
+        });
+
+        // 初始化行政區
+        $citySelect.trigger("change");
+
+        let $tableBody = $("#districts-table tbody");
+        $.each(data, function (i, city) {
+          $.each(city.districts, function (j, district) {
+            var $row = $("<tr>");
+            if (j === 0) {
+              $("<td>")
+                .attr("rowspan", city.districts.length)
+                .text(city.name)
+                .appendTo($row);
+            }
+            $("<td>").text(district.zip).appendTo($row);
+            $("<td>").text(district.name).appendTo($row);
+            $tableBody.append($row);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
